@@ -119,7 +119,7 @@ def convert_coordinate(lstpixel):
     yworld = (yworld - 370) * (-1)
     xworld = (xworld - 370) * (-1)
     return [xworld,yworld]
-def PathFinder(frame,tune1,tune2):
+def PathFinder(frame):
     global cornerpoints_skel
     clone = frame.copy()[35:-35, 35:-35]
     # cv2.imshow("120",clone)
@@ -295,13 +295,13 @@ cv2.createTrackbar('max','tuner',10,200,nothing)
 # create tratrackbars for erosion contours
 # cv2.createTrackbar('erodeCon','tuner',1,10,nothing)
 
-while(1):
-    tune1 = cv2.getTrackbarPos('min','tuner')
-    tune2 = cv2.getTrackbarPos('max','tuner')
-    x = img.copy()
-    func = PathFinder(x,tune1,tune2)
-    cv2.imshow('tuner',func)
+# while(1):
+#     tune1 = cv2.getTrackbarPos('min','tuner')
+#     tune2 = cv2.getTrackbarPos('max','tuner')
+#     x = img.copy()
+#     func = PathFinder(x,tune1,tune2)
+#     cv2.imshow('tuner',func)
     # cv2.imwrite('fieldimages/adjustfield.png', func) 
-    cv2.waitKey(10)
-# x = img.copy()
+    # cv2.waitKey(10)
+x = img.copy()
 # func = PathFinder(x,tune1,tune2)

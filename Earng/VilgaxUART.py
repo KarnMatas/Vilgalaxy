@@ -51,7 +51,7 @@ def SetPositionXY(X, Y):
 def TrajectoryXY(rf, degree):
     print("Roger That,The war is On.")
     postr = rf * 100.00
-    postd = degree * 100.00
+    postd = degree
     hbyter = int(postr) >> 8
     hbyted = int(postd) >> 8
     print(hex(hbyter), hex(hbyted))

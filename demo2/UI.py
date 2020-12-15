@@ -4,7 +4,7 @@ from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import sys
-import VilgaxUART
+from VilgaxUART import *
 
 
 class Window(QMainWindow):
@@ -25,7 +25,6 @@ class Window(QMainWindow):
         # showing all the widgets
         self.show()
 
-        VilgaxUART.Connect()
 
     def getName(self):
         print(self.image1)
@@ -35,39 +34,65 @@ class Window(QMainWindow):
     def UiComponents(self):
 
         # creating a push button
-        button_Connect = QPushButton("Connect", self)
-        # setting geometry of button
-        button_Connect.setGeometry(900, 100, 200, 40)
-        # adding action to a button
-        button_Connect.clicked.connect(self.click_Connect)
+        # button_Connect = QPushButton("Connect", self)
+        # # setting geometry of button
+        # button_Connect.setGeometry(900, 100, 200, 40)
+        # # adding action to a button
+        # button_Connect.clicked.connect(self.click_Connect)
+
+        # button_Connect.setStyleSheet("color: white")
 
         # creating a push button
-        button_Home = QPushButton("Home", self)
+        button_Home = QPushButton("Home/Stop", self)
         # setting geometry of button
-        button_Home.setGeometry(900, 150, 200, 40)
+        button_Home.setGeometry(900, 100, 200, 40)
         # adding action to a button
         button_Home.clicked.connect(self.click_Home)
+
 
         # creating a push button
         button_FindParts = QPushButton("Find Parts", self)
         # setting geometry of button
-        button_FindParts.setGeometry(900, 200, 200, 40)
+        button_FindParts.setGeometry(900, 150, 200, 40)
         # adding action to a button
         button_FindParts.clicked.connect(self.click_FindParts)
+
 
         # creating a push button
         button_Start = QPushButton("Start", self)
         # setting geometry of button
-        button_Start.setGeometry(900, 250, 200, 40)
+        button_Start.setGeometry(900, 200, 200, 40)
         # adding action to a button
         button_Start.clicked.connect(self.click_Start)
+
 
         # creating a push button
         button_Stop = QPushButton("Run", self)
         # setting geometry of button
-        button_Stop.setGeometry(900, 300, 200, 40)
+        button_Stop.setGeometry(900, 250, 200, 40)
         # adding action to a button
         button_Stop.clicked.connect(self.click_Run)
+
+        # creating a push button
+        button_Stop = QPushButton("+", self)
+        # setting geometry of button
+        button_Stop.setGeometry(900, 300, 200, 40)
+        # adding action to a button
+        button_Stop.clicked.connect(self.up)
+
+        # creating a push button
+        button_Stop = QPushButton("-", self)
+        # setting geometry of button
+        button_Stop.setGeometry(900, 350, 200, 40)
+        # adding action to a button
+        button_Stop.clicked.connect(self.down)
+
+        # creating a push button
+        button_Showimg = QPushButton("Show", self)
+        # setting geometry of button
+        button_Showimg.setGeometry(900, 400, 200, 40)
+        # adding action to a button
+        button_Showimg.clicked.connect(self.Showimg)
 
         # show image
         # creating the check-box
@@ -79,7 +104,7 @@ class Window(QMainWindow):
         # and changing with and height of indicator
         self.checkbox.setStyleSheet("QCheckBox::indicator"
                                     "{"
-                                    "background-image : url(ImageForUI/" + self.image1 + ".jpg);"
+                                    "background-image : url(" + self.image1 + ".jpg);"
                                                                                          "width :600px;"
                                                                                          "height : 600px;"
                                                                                          "}")
@@ -87,8 +112,7 @@ class Window(QMainWindow):
         # action method
 
     def click_Home(self):
-        # VilgaxUART.SetHome()
-        self.image1 = "home"
+        self.image1 = "Home"
         self.checkbox.setGeometry(100, 100, 600, 600)
         self.checkbox.setStyleSheet("QCheckBox::indicator"
                                     "{"
@@ -99,22 +123,45 @@ class Window(QMainWindow):
         self.getName()
         self.UiComponents()
         self.show()
+        SetHome()
 
     def click_FindParts(self):
-        VilgaxUART.Capture1
-        # print("click_FindParts")
+        cap = cv2.VideoCapture(0 + cv2.CAP_DSHOW)
+        cap.set(3, 1280)  # set the resolution
+        cap.set(4, 720)
+        cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
+        ret, img = cap.read()
+        cv2.imwrite('fieldimages/myfielddemo.png', img)
+        cv2.imwrite('fieldimages/myfielddemo.jpg', img)
+    def up(self):
+        SetPositionZ(40, 70, 0)
 
-    def click_Connect(self):
-        # print("Connect")
-        VilgaxUART.Connect()
+    def down(self):
+        SetPositionZ(10, 70, 0)
+
+    def Showimg(self):
+        self.image1 = "myfielddemo"
+        self.checkbox.setGeometry(100, 100, 600, 600)
+        self.checkbox.setStyleSheet("QCheckBox::indicator"
+                                    "{"
+                                    "background-image : url( fieldimages/" + self.image1 + ".jpg);"
+                                                                                         "width :600px;"
+                                                                                         "height : 600px;"
+                                                                                         "}")
+        self.getName()
+        self.UiComponents()
+        self.show()
 
     def click_Start(self):
         # print("Start")
-        VilgaxUART.Start()
-    #
+        SetPositionZ(40, 70, 1)
+        time.sleep(4)
+        Capture()
+        
+
     def click_Run(self):
         # print("Run")
-        VilgaxUART.Run()
+        positionZ, anglesZ = PathFinder(x)
 
     def change_pic_sethome(self, Image1):
         self.image1 = Image1
@@ -134,7 +181,7 @@ class Window(QMainWindow):
 App = QApplication(sys.argv)
 
 # create the instance of our Window
-window = Window("Oat3")
+window = Window("Home")
 
 # start the app
 sys.exit(App.exec())

@@ -201,6 +201,7 @@ def PathFinder(frame):
     adjustimg_markpath = adjustment_markpath(keepedge)
     # return adjustimg_markpath
     adjustimg_chessboard = adjustment_chessboard(keepedge)
+    # return adjustimg_chessboard
     contours, hierarchy = cv2.findContours(adjustimg_markpath, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
     contours1, hierarchy1 = cv2.findContours(adjustimg_chessboard, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
     
@@ -245,8 +246,8 @@ def PathFinder(frame):
         thined = cv2.ximgproc.thinning(pathcontours[path])
         thinedpath.append(thined)
         endpoints = findendp(thined)
-        # cv2.imshow('thined',thinedpath[path])---+++
-        # cv2.waitKey(0)
+        cv2.imshow('thined',thinedpath[path])
+        cv2.waitKey(0)
     # gradientpath = cv2.bitwise_and(,)
     ##################################  ต้องมาทำเป็นสำหรับหลาย path [0] เป็น [i]
         spreadline(endpoints,thinedpath[path],newimg) # endp ,รูปที่ thined, รูปดั้งเดิมสีเทา
@@ -267,10 +268,10 @@ def PathFinder(frame):
         fullpath = cv2.addWeighted(fullpath, 1, pathlst[i], 1, 0)
     
     contours2, hierarchy2 = cv2.findContours(fullskel, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-    # print("contours2 =",len(contours2))
+    
     famesy = np.zeros(keepedge.shape, np.uint8) # famesy จะรวม path
     cv2.drawContours(famesy,contours2,-1,(255,255,255),3)
-    cv2.imshow("myfriend",fullskel)
+    cv2.imshow("myfriend",fullpath)
     # for skel in range(len(contours2)):
     #     epsilon = 0.05*cv2.arcLength(contours2[skel],True)
     #     approx = cv2.approxPolyDP(contours2[skel],epsilon,True)
@@ -482,7 +483,7 @@ def PathFinder(frame):
 
 ######################################## main ########################################################
 # img = cv2.imread('fieldimages/myfield.png', cv2.IMREAD_COLOR)
-img = cv2.imread('fieldimages/myfieldeiei.png', cv2.IMREAD_COLOR)
+img = cv2.imread('fieldimages/myfield3.png', cv2.IMREAD_COLOR)
 # img = cv2.imread('fieldimages/myfield22.png', cv2.IMREAD_COLOR)
 cv2.namedWindow('tuner')
 def nothing(x):
@@ -493,14 +494,14 @@ cv2.createTrackbar('min','tuner',10,200,nothing)
 cv2.createTrackbar('max','tuner',10,200,nothing)
 # create tratrackbars for erosion contours
 # cv2.createTrackbar('erodeCon','tuner',1,10,nothing)
-
-# while(1):
-#     tune1 = cv2.getTrackbarPos('min','tuner')
-#     tune2 = cv2.getTrackbarPos('max','tuner')
-#     x = img.copy()
-#     func = PathFinder(x) #,tune1,tune2
-#     cv2.imshow('tuner',func)
-#     # cv2.imwrite('fieldimages/adjustfield.png', func) 
-#     cv2.waitKey(1)
-x = img.copy()
-# func = PathFinder(x,tune1,tune2)
+###################### สำหรับ รันไฟล์นี้ไฟล์เดียว ##############################
+while(1):
+    tune1 = cv2.getTrackbarPos('min','tuner')
+    tune2 = cv2.getTrackbarPos('max','tuner')
+    x = img.copy()
+    func = PathFinder(x) #,tune1,tune2
+    cv2.imshow('tuner',func)
+    # cv2.imwrite('fieldimages/adjustfield.png', func) 
+    cv2.waitKey(1)
+######################### สำหรับ รันเชื่อมกับไฟล์อื่นๆ #########################
+# x = img.copy()
